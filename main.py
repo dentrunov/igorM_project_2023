@@ -1,4 +1,4 @@
-from app import create_flask_app
+from app import app
 
 if __name__ == "__main__":
-    create_flask_app().run(host='0.0.0.0')
+    app.run(host='0.0.0.0')

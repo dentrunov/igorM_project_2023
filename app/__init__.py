@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
 from flask_bootstrap import Bootstrap
+from flask import render_template, request
 
 
 app = Flask(__name__)
