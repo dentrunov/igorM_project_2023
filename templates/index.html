@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body bgcolor="aliceblue">
+<h1>{{ name }}</h1>
+<p>Здравствуйте, это наш тестовый сайт</p>
+<p>{{ error }}</p>
+<form method="POST">
+    {{ form.username.label() }}
+    {{ form.username() }}
+    {{ form.pasw.label() }}
+    {{ form.pasw() }}
+    {{ form.submit() }}
+
+</form>
+</ul>
+</body>
+</html>
