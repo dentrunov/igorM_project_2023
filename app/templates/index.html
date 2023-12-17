@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная страница</title>
-</head>
-<body bgcolor="aliceblue">
-<h1>{{ name }}</h1>
-<p>Здравствуйте, это наш тестовый сайт</p>
-<p>{{ error }}</p>
-<form method="POST">
-    {{ form.username.label() }}
-    {{ form.username() }}
-    {{ form.pasw.label() }}
-    {{ form.pasw() }}
-    {{ form.submit() }}
+{% extends "base.html" %}
+{% block title %}
 
-</form>
-</ul>
-</body>
-</html>
+{% endblock %}
+
+{% block content %}
+    <p>Какй-то текст</p>
+{% endblock %}
