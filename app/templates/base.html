@@ -1,17 +1,45 @@
-{% extends 'bootstrap/base.html' %}
+{% from 'bootstrap5/nav.html' import render_nav_item %} 
+<html lang="en">
+    <head>
+        {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        {% endblock %}
+
+        <title>Your page title</title>
+        {% endblock %}
+    </head>
+    <body>
+        
 
 {% block title %}
-    <h1>{{ title }}</h1>
+<h1>{{ title }}</h1>
 {% endblock %}
 
 {% block navbar %}
-    <nav class="navbar navbar-default">
-        
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar-nav mr-auto">
+        {{ render_nav_item('index', 'Главная страница') }}
+        {{ render_nav_item('enter', 'Войти') }}
+        {{ render_nav_item('check', 'Проверить') }}
+    </div>
+</nav>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        
-    </div>
+<div class="container">
+
+</div>
 {% endblock %}
+{% block scripts %}
+            <!-- Optional JavaScript -->
+            {{ bootstrap.load_js() }}
+{% endblock %}
+    </body>
+</html>
+
