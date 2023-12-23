@@ -1,4 +1,6 @@
 from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,8 +10,15 @@ class User(db.Model):
     tg_id = db.Column(db.Integer, index=True, unique=True)
 
     def __repr__(self):
-        return '<User {}>'.format(self.username) 
-    
+        return '<User {}>'.format(self.username)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
 class Pupils(db.Model):
     pupil_id = db.Column(db.Integer, primary_key=True)
     tg_id = db.Column(db.Integer, index=True, unique=True)
@@ -20,4 +29,4 @@ class Pupils(db.Model):
     at_school = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return '<Pupil {}>'.format(self.username) 
+        return '<Pupil {}>'.format(self.username)
