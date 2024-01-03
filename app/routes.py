@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user, login_user
+from flask_login import login_required, current_user, login_user, logout_user
 from urllib.parse import urlsplit
 
 from .forms import AuthForm, RegistrationForm
@@ -12,9 +12,19 @@ from .models import User, Pupils
 def index():
     return render_template('index.html')
 
-@app.route('/enter')
+@app.route('/enter', methods=['GET', 'POST'])
 def enter():
-    return render_template('enter.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = AuthForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.pasw.data):
+            flash('Invalid username or password')
+            return redirect(url_for('enter'))
+        login_user(user)
+        return redirect(url_for('index'))
+    return render_template('enter.html', title='Вход', form=form)
 
 @app.route('/reg', methods=['GET', 'POST'])
 def reg():
@@ -27,8 +37,15 @@ def reg():
         db.session.add(user)
         db.session.commit()
         flash('Поздравляю, пользователь зарегистрирован')
-        return redirect(url_for('login'))
+        return redirect(url_for('enter'))
     return render_template('reg.html', title="Регистрация пользователя", form=form)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
 
 @app.route('/check')
 @login_required
