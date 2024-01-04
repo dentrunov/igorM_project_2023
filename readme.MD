@@ -1,6 +1,6 @@
 **Порядок установки и запуска**
 1. Переходите в папку, где будет храниться проект и запускаете (предварительно должен быть установлен Git)
-```git clone https://github.com/dentrunov/igorM_project_2023.git```
+```sh git clone https://github.com/dentrunov/igorM_project_2023.git```
 2. Выполняете команды
 ```docker-compose build ```
 ```docker-compose up -d```
