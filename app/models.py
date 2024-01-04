@@ -34,4 +34,24 @@ class Pupils(db.Model):
     at_school = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return '<Pupil {}>'.format(self.username)
+        return '<Pupil {}>'.format(self.pupil_name)
+
+
+class Codes(db.Model):
+    code_id = db.Column(db.Integer, primary_key=True)
+    code_hash = db.Column(db.String(2048), index=True, unique=True)
+    pupil_id = db.Column(db.Integer, db.ForeignKey("pupils.pupil_id"))
+    code_datetime = db.Column(db.DateTime)
+    code_expire_datetime = db.Column(db.DateTime)
+    
+    def __repr__(self):
+        return '<Code {}>'.format(self.code_id)
+
+class Visits(db.Model):
+    visit_id = db.Column(db.Integer, primary_key=True)
+    pupil_id = db.Column(db.Integer, db.ForeignKey("pupils.pupil_id"))
+    visit_datetime = db.Column(db.DateTime)
+    code_id = db.Column(db.Integer, db.ForeignKey("codes.code_id"))
+
+    def __repr__(self):
+        return '<Code {}>'.format(self.visit_datetime)
