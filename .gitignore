@@ -8,3 +8,4 @@ flaskapp/migrations/__pycache__/*
 flaskapp/migrations/versions/__pycache__/*
 migrations/__pycache__/*
 tbot/__pycache__/*
+tbot/config.py
