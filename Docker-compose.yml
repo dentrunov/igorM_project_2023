@@ -2,7 +2,7 @@ version: '3'
 services:
   flask:
     # Путь до Dockerfile
-    build: ./
+    build: ./flaskapp/
     # Имя для создаваемого контейнера
     container_name: igorm_2023
     # Создание переменных окружения в контейнере
@@ -25,6 +25,33 @@ services:
     command: python3 main.py
     depends_on:
       - db
+
+  tbot:
+    # Путь до Dockerfile
+    build: ./tbot/
+    # Имя для создаваемого контейнера
+    container_name: tbot
+    # Создание переменных окружения в контейнере
+    # environment:
+    #   # для отладки (при запуске в релиз убрать!)
+    #   - FLASK_ENV=development
+    #   ## Позволяет отслеживать процесс работы приложения в командной строке
+    #   - PYTHONUNBUFFERED=True                   
+    #   ##
+    # Перезапускаем сервис в случае падения 
+    restart: on-failure
+    # Прокладывам путь для файлов. Все файлы, которые хранятся у вас в 
+    # директории ./backend, появятся в директории контейнера /backend
+    volumes:
+      - ./:/tbot
+    # Открываем порт в контейнер
+    # Порт, который будет смотреть наружу : порт который используется внутри контейнера
+    # ports:
+    #   - "5000:5000"
+    command: python3 main.py
+    depends_on:
+      - db
+
   db:
     image: postgres:13
     volumes:
