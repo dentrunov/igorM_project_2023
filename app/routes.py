@@ -50,4 +50,4 @@ def logout():
 @app.route('/check')
 @login_required
 def check():
-    return 'third_page'
+    return render_template('check.html', title="Проверка")
