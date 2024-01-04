@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
@@ -19,3 +19,7 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Неверное имя пользователя.')
+        
+class CreatePupilsForm(FlaskForm):
+    count = IntegerField("Количество учеников")
+    submit = SubmitField('Сгенерировать')

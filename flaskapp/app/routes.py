@@ -2,9 +2,10 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from urllib.parse import urlsplit
 
-from .forms import AuthForm, RegistrationForm
+from .forms import AuthForm, RegistrationForm, CreatePupilsForm
 from app import app, db
 from .models import User, Pupils
+from .data import generate_pupils
 
 
 @app.route('/')
@@ -47,7 +48,16 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/check')
+@app.route('/check', methods=['GET', 'POST'])
 @login_required
 def check():
-    return render_template('check.html', title="Проверка")
+    form = CreatePupilsForm()
+    pupils_list = Pupils.query.all()
+    if form.validate_on_submit():
+        names = [Pupils(**row) for row in generate_pupils(form.count.data)]
+        db.session.add_all(names)
+        db.session.commit()
+        flash('Список создан')
+        return redirect(url_for('check'))
+    
+    return render_template('check.html', title="Проверка" , form=form, pupils_list=pupils_list)

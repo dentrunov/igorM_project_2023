@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+<h1>Список учеников</h1>
+<ol>
+{% for pupil in pupils_list %}
+    <li>{{ pupil.id }} - {{ pupil.pupil_name}} - {{ pupil.last_visit}}</li>
+{% endfor %}
+</ol>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.count.label }}<br>
+        {{ form.count(size=32) }}<br>
+        {% for error in form.count.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
