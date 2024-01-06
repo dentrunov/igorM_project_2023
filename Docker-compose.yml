@@ -39,7 +39,7 @@ services:
     #   - PYTHONUNBUFFERED=True                   
     #   ##
     # Перезапускаем сервис в случае падения 
-    restart: on-failure
+    restart: always
     # Прокладывам путь для файлов. Все файлы, которые хранятся у вас в 
     # директории ./backend, появятся в директории контейнера /backend
     volumes:
@@ -60,6 +60,9 @@ services:
       - POSTGRES_USER=hello_flask
       - POSTGRES_PASSWORD=hello_flask
       - POSTGRES_DB=hello_flask_dev
-
+    ports:
+      - "5432:5432"
 volumes:
   postgres_data:
+  myapp:
+  tbot:

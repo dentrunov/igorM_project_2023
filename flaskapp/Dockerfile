@@ -1,4 +1,6 @@
 FROM python:3.11
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 COPY . /myapp/flaskapp
 WORKDIR /myapp/flaskapp
 RUN pip3 install --upgrade pip

@@ -5,11 +5,16 @@
 
 {% block content %}
 <h1>Список учеников</h1>
-<ol>
-{% for pupil in pupils_list %}
-    <li>{{ pupil.id }} - {{ pupil.pupil_name}} - {{ pupil.last_visit}}</li>
-{% endfor %}
-</ol>
+{% if pupils_list|length > 0 %}
+<table>
+    {% for pupil in pupils_list %}
+    <tr>
+        <td>{{ pupil.pupil_id }} </td><td> {{ pupil.pupil_name}} </td><td>  {{ pupil.last_visit}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+<h3>Сгенерировать еще учеников</h3>
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <p>
