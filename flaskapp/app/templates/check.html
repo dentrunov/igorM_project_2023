@@ -20,7 +20,17 @@
 <h3>Сгеренерировать коды</h3>
 <form action="" method="post">
     {{ codes_form.hidden_tag() }}
-    <p>{{ codes_form.submit() }}</p>
+    <p>{{ codes_form.submit_code() }}</p>
 </form>
-
+<form action="" method="post">
+    {{ gen_pupils_form.hidden_tag() }}
+    <p>
+        {{ gen_pupils_form.count.label }}<br>
+        {{ gen_pupils_form.count(size=32) }}<br>
+        {% for error in gen_pupils_form.count.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ gen_pupils_form.submit() }}</p>
+</form>
 {% endblock %}

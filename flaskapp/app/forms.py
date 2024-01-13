@@ -25,4 +25,4 @@ class CreatePupilsForm(FlaskForm):
     submit = SubmitField('Сгенерировать')
 
 class CreateCodesForm(FlaskForm):
-    submit = SubmitField('Сгенерировать коды')
+    submit_code = SubmitField('Сгенерировать коды')

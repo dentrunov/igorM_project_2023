@@ -49,23 +49,23 @@ def logout():
 @app.route('/check', methods=['GET', 'POST'])
 @login_required
 def check():
-    # gen_pupils_form = CreatePupilsForm()
+    gen_pupils_form = CreatePupilsForm()
     codes_form = CreateCodesForm()
     pupils_list = Pupils.query.all()
-    if codes_form.validate_on_submit():
+    if codes_form.submit_code.data and codes_form.validate_on_submit():
         q = len(pupils_list)
         codes = generate_codes(q)
         for i in range(q):
             pupils_list[i].last_generated_code = codes[i]
         db.session.commit()
         return redirect(url_for('check'))
-    # if gen_pupils_form.validate_on_submit():
-    #     names = [Pupils(**row) for row in generate_pupils(gen_pupils_form.count.data)]
-    #     db.session.add_all(names)
-    #     db.session.commit()
-    #     flash('Список создан')
-    #     return redirect(url_for('check'))
+    if gen_pupils_form.submit.data and gen_pupils_form.validate_on_submit():
+        names = [Pupils(**row) for row in generate_pupils(gen_pupils_form.count.data)]
+        db.session.add_all(names)
+        db.session.commit()
+        flash('Список создан')
+        return redirect(url_for('check'))
     
     
-    return render_template('check.html', title="Проверка", codes_form=codes_form, pupils_list=pupils_list)
-    # return render_template('check.html', title="Проверка", gen_pupils_form=gen_pupils_form, codes_form=codes_form, pupils_list=pupils_list)
+    # return render_template('check.html', title="Проверка", codes_form=codes_form, pupils_list=pupils_list)
+    return render_template('check.html', title="Проверка", gen_pupils_form=gen_pupils_form, codes_form=codes_form, pupils_list=pupils_list)
