@@ -26,11 +26,11 @@ def load_user(id):
 
 class Pupils(db.Model):
     pupil_id = db.Column(db.Integer, primary_key=True)
-    tg_id = db.Column(db.Integer, index=True, unique=True)
+    tg_id = db.Column(db.BigInteger, index=True, default=0)
     pupil_name = db.Column(db.String(64), index=True)
     last_visit = db.Column(db.DateTime)
-    last_generated_code = db.Column(db.String(64), index=True, unique=True) #TODO убрать
-    last_generated_code_date = db.Column(db.DateTime) #TODO убрать
+    last_generated_code = db.Column(db.String(64), index=True, unique=True)
+    last_generated_code_date = db.Column(db.DateTime)
     at_school = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
