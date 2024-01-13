@@ -2,10 +2,10 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from urllib.parse import urlsplit
 
-from .forms import AuthForm, RegistrationForm, CreatePupilsForm
+from .forms import AuthForm, RegistrationForm, CreatePupilsForm, CreateCodesForm
 from app import app, db
 from .models import User, Pupils
-from .data import generate_pupils
+from .data import generate_pupils, generate_codes
 
 
 @app.route('/')
@@ -41,23 +41,31 @@ def reg():
         return redirect(url_for('enter'))
     return render_template('reg.html', title="Регистрация пользователя", form=form)
 
-
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
 @app.route('/check', methods=['GET', 'POST'])
 @login_required
 def check():
-    form = CreatePupilsForm()
+    # gen_pupils_form = CreatePupilsForm()
+    codes_form = CreateCodesForm()
     pupils_list = Pupils.query.all()
-    if form.validate_on_submit():
-        names = [Pupils(**row) for row in generate_pupils(form.count.data)]
-        db.session.add_all(names)
+    if codes_form.validate_on_submit():
+        q = len(pupils_list)
+        codes = generate_codes(q)
+        for i in range(q):
+            pupils_list[i].last_generated_code = codes[i]
         db.session.commit()
-        flash('Список создан')
         return redirect(url_for('check'))
+    # if gen_pupils_form.validate_on_submit():
+    #     names = [Pupils(**row) for row in generate_pupils(gen_pupils_form.count.data)]
+    #     db.session.add_all(names)
+    #     db.session.commit()
+    #     flash('Список создан')
+    #     return redirect(url_for('check'))
     
-    return render_template('check.html', title="Проверка" , form=form, pupils_list=pupils_list)
+    
+    return render_template('check.html', title="Проверка", codes_form=codes_form, pupils_list=pupils_list)
+    # return render_template('check.html', title="Проверка", gen_pupils_form=gen_pupils_form, codes_form=codes_form, pupils_list=pupils_list)

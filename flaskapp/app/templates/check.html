@@ -5,25 +5,22 @@
 
 {% block content %}
 <h1>Список учеников</h1>
+
 {% if pupils_list|length > 0 %}
 <table>
+    <tbody class=table-striped>
     {% for pupil in pupils_list %}
     <tr>
-        <td>{{ pupil.pupil_id }} </td><td> {{ pupil.pupil_name}} </td><td>  {{ pupil.last_visit}}</td>
+        <td>{{ pupil.pupil_id }} </td><td> {{ pupil.pupil_name}} </td><td>  {{ pupil.last_visit}}</td><td>{{ pupil.last_generated_code }}</td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 {% endif %}
-<h3>Сгенерировать еще учеников</h3>
+<h3>Сгеренерировать коды</h3>
 <form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.count.label }}<br>
-        {{ form.count(size=32) }}<br>
-        {% for error in form.count.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
+    {{ codes_form.hidden_tag() }}
+    <p>{{ codes_form.submit() }}</p>
 </form>
+
 {% endblock %}
