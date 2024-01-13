@@ -23,3 +23,6 @@ class RegistrationForm(FlaskForm):
 class CreatePupilsForm(FlaskForm):
     count = IntegerField("Количество учеников")
     submit = SubmitField('Сгенерировать')
+
+class CreateCodesForm(FlaskForm):
+    submit = SubmitField('Сгенерировать коды')

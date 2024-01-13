@@ -32,11 +32,11 @@ services:
     # Имя для создаваемого контейнера
     container_name: tbot
     # Создание переменных окружения в контейнере
-    # environment:
+    environment:
     #   # для отладки (при запуске в релиз убрать!)
     #   - FLASK_ENV=development
     #   ## Позволяет отслеживать процесс работы приложения в командной строке
-    #   - PYTHONUNBUFFERED=True                   
+      - PYTHONUNBUFFERED=True                   
     #   ##
     # Перезапускаем сервис в случае падения 
     restart: always
@@ -64,5 +64,3 @@ services:
       - "5432:5432"
 volumes:
   postgres_data:
-  myapp:
-  tbot:
