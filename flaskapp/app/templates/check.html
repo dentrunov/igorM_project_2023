@@ -7,14 +7,20 @@
 <h1>Список учеников</h1>
 
 {% if pupils_list|length > 0 %}
-<table>
-    <tbody class=table-striped>
+<table class="table table-light table-striped">
+    <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Имя</th>
+          <th scope="col">Последнее посещение</th>
+          <th scope="col">Код ученика</th>
+        </tr>
+      </thead>
     {% for pupil in pupils_list %}
     <tr>
         <td>{{ pupil.pupil_id }} </td><td> {{ pupil.pupil_name}} </td><td>  {{ pupil.last_visit}}</td><td>{{ pupil.last_generated_code }}</td>
     </tr>
     {% endfor %}
-    </tbody>
 </table>
 {% endif %}
 <h3>Сгеренерировать коды</h3>

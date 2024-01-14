@@ -51,6 +51,25 @@ services:
     command: python3 main.py
     depends_on:
       - db
+      
+  qr_reader:
+    privileged: true
+    build: ./qr_reader/
+    container_name: qr_reader
+    environment:
+      - PYTHONUNBUFFERED=True
+    devices:
+      - "/dev/video0:/dev/video0"
+    restart: always
+    volumes:
+      - ./:/qr_reader
+    # Открываем порт в контейнер
+    # Порт, который будет смотреть наружу : порт который используется внутри контейнера
+    # ports:
+    #   - "5000:5000"
+    command: python3 main.py
+    depends_on:
+      - db
 
   db:
     image: postgres:13

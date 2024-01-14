@@ -2,8 +2,9 @@ import asyncio
 import logging
 import sys
 import qrcode
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, select
 from sqlalchemy.orm import Session
+from datetime import date
 
 
 from aiogram import Bot, Dispatcher, Router, types, F
@@ -15,6 +16,7 @@ from aiogram.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton
 
 from config import TOKEN, db_data
+from models import Pupils
 
 dp = Dispatcher()
 engine = create_engine(db_data, echo=True)
@@ -33,6 +35,7 @@ def get_qr_code(hash):
         box_size=10,
         border=4,
             )
+    qr.add_data(hash)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
     img.save(f"{hash}.png")
@@ -52,11 +55,12 @@ async def command__handler_send_qr(message: Message) -> None:
     """
     id = message.from_user.id
     with Session(engine) as session:
-        query = text(f"""SELECT last_generated_code 
-                    FROM pupils WHERE tg_id={id}""")
-        user = session.execute(query).fetchall()
-    photo = FSInputFile(get_qr_code(user[0][0]))
-    await message.answer_photo(photo, caption="caption")
+        query = select(Pupils).where(Pupils.tg_id == id)
+        user = session.execute(query).first()
+        code = user[0].last_generated_code
+    photo = FSInputFile(get_qr_code(code))
+    dt = date.today().strftime("%d.%m.%Y")
+    await message.answer_photo(photo, caption=f"Ваш код на {dt}")
     
 
 @dp.message(F.text.lower() == 'отправить всем')
@@ -66,8 +70,9 @@ async def command__handler_send_qr_all(message: Message) -> None:
     """
     
     with Session(engine) as session:
-        query = text(f"""SELECT tg_id, last_generated_code 
-                    FROM pupils WHERE tg_id!=0""")
+        # query = text(f"""SELECT tg_id, last_generated_code 
+        #             FROM pupils WHERE tg_id!=0""")
+        query = select(Pupils.tg_id, Pupils.last_generated_code).where(Pupils.tg_id != 0)
         users = session.execute(query).fetchall()
     for tg_id, last_generated_code in users:
         photo = FSInputFile(get_qr_code(last_generated_code))
