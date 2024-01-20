@@ -31,6 +31,8 @@ while True:
                 if user_date - dt.now() < timedelta(hours=HOURS):
                     print("Пришел", new_user[1], now)
                     query = update(Pupils).where(Pupils.last_generated_code == data).values(last_visit=now, last_generated_code=0)
+                    session.execute(query)
+                    session.commit()
                     break
                 else:
                     print("Слишком поздно!", new_user[1], now)
