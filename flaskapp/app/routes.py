@@ -4,7 +4,7 @@ from urllib.parse import urlsplit
 
 from datetime import datetime as dt
 
-from .forms import AuthForm, RegistrationForm, CreatePupilsForm, CreateCodesForm
+from .forms import AuthForm, RegistrationForm, CreatePupilsForm, CreateCodesForm, CreateTGIDForm
 from app import app, db
 from .models import User, Pupils
 from .data import generate_pupils, generate_codes
@@ -54,8 +54,10 @@ def check():
     gen_pupils_form = CreatePupilsForm()
     codes_form = CreateCodesForm()
     pupils_list = Pupils.query.all()
+    q = len(pupils_list)
+    tg_forms = [CreateTGIDForm() for i in range(q)]
     if codes_form.submit_code.data and codes_form.validate_on_submit():
-        q = len(pupils_list)
+        
         codes = generate_codes(q)
         for i in range(q):
             pupils_list[i].last_generated_code = codes[i]
@@ -68,7 +70,14 @@ def check():
         db.session.commit()
         flash('Список создан')
         return redirect(url_for('check'))
-    
+    if CreateTGIDForm().tgid_submit.data and CreateTGIDForm().validate_on_submit():
+        pupil_id = request.form["tg_hidden"]
+        update_pupil = Pupils.query.filter_by(pupil_id=pupil_id).first()
+        print(2)
+        update_pupil.tg_id = request.form["tgid_input"]
+        db.session.commit()
+        return redirect(url_for('check'))
+ 
     
     # return render_template('check.html', title="Проверка", codes_form=codes_form, pupils_list=pupils_list)
-    return render_template('check.html', title="Проверка", gen_pupils_form=gen_pupils_form, codes_form=codes_form, pupils_list=pupils_list)
+    return render_template('check.html', title="Проверка", gen_pupils_form=gen_pupils_form, codes_form=codes_form, pupils_list=pupils_list, tg_forms=tg_forms)

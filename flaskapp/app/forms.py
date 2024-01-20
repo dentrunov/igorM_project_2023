@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, SubmitField, IntegerField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, SubmitField, IntegerField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
@@ -26,3 +26,8 @@ class CreatePupilsForm(FlaskForm):
 
 class CreateCodesForm(FlaskForm):
     submit_code = SubmitField('Сгенерировать коды')
+
+class CreateTGIDForm(FlaskForm):
+    tgid_input = StringField('TGID', validators=[DataRequired()])
+    tg_hidden = HiddenField("TGhid")
+    tgid_submit = SubmitField('Сохранить')

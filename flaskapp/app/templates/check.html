@@ -14,11 +14,23 @@
           <th scope="col">Имя</th>
           <th scope="col">Последнее посещение</th>
           <th scope="col">Код ученика</th>
+          <th scope="col">TG ID</th>
         </tr>
       </thead>
-    {% for pupil in pupils_list %}
+    {% for i in range(pupils_list|length) %}
     <tr>
-        <td>{{ pupil.pupil_id }} </td><td> {{ pupil.pupil_name}} </td><td>  {{ pupil.last_visit}}</td><td>{{ pupil.last_generated_code }}</td>
+        <td>{{ pupils_list[i].pupil_id }} </td>
+        <td> {{ pupils_list[i].pupil_name}} </td>
+        <td>  {{ pupils_list[i].last_visit}}</td>
+        <td>{{ pupils_list[i].last_generated_code }}</td>
+        <td>
+            <form action="" method="post">
+                {{ tg_forms[i].tg_hidden(value=pupils_list[i].pupil_id) }}
+                {{ tg_forms[i].hidden_tag() }}                
+                {{ tg_forms[i].tgid_input(value=pupils_list[i].tg_id if pupils_list[i].tg_id != 0 else '' ) }}
+                {{ tg_forms[i].tgid_submit() }}
+            </form>
+        </td>
     </tr>
     {% endfor %}
 </table>

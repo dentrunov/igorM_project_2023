@@ -46,6 +46,7 @@ async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
+    print(message.from_user.id)
     await message.answer(f"Hello, {hbold(message.from_user.full_name)}!", reply_markup=gen_kb)
 
 @dp.message(F.text.lower() == 'показать qr-code')
