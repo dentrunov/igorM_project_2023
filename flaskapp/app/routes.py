@@ -2,6 +2,8 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from urllib.parse import urlsplit
 
+from datetime import datetime as dt
+
 from .forms import AuthForm, RegistrationForm, CreatePupilsForm, CreateCodesForm
 from app import app, db
 from .models import User, Pupils
@@ -57,6 +59,7 @@ def check():
         codes = generate_codes(q)
         for i in range(q):
             pupils_list[i].last_generated_code = codes[i]
+            pupils_list[i].last_generated_code_date = dt.now()
         db.session.commit()
         return redirect(url_for('check'))
     if gen_pupils_form.submit.data and gen_pupils_form.validate_on_submit():
