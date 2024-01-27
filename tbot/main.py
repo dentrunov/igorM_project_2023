@@ -70,10 +70,13 @@ async def command__handler_send_qr(message: Message) -> None:
         query = select(Pupils).where(Pupils.tg_id == id)
         user = session.execute(query).first()
         code = user[0].last_generated_code
-    photo = FSInputFile(get_qr_code(code))
-    dt = date.today().strftime("%d.%m.%Y")
-    await message.answer_photo(photo, caption=f"Ваш код на {dt}")
-    
+    if code != 0:
+        photo = FSInputFile(get_qr_code(code))
+        dt = date.today().strftime("%d.%m.%Y")
+        await message.answer_photo(photo, caption=f"Ваш код на {dt}")
+        os.remove(photo)
+    else:
+        await message.answer(f"Вы уже вошли в школу, {hbold(message.from_user.full_name)}!", reply_markup=gen_kb)
 
 @dp.message(F.text.lower() == 'отправить всем')
 async def command__handler_send_qr_all(message: Message) -> None:
@@ -86,9 +89,10 @@ async def command__handler_send_qr_all(message: Message) -> None:
         query = select(Pupils.tg_id, Pupils.last_generated_code).where(Pupils.tg_id != 0)
         users = session.execute(query).fetchall()
     for tg_id, last_generated_code in users:
-        photo = FSInputFile(get_qr_code(last_generated_code))
-        await bot.send_photo(chat_id=tg_id, photo=photo)
-        os.remove(photo)
+        if last_generated_code != 0:
+            photo = FSInputFile(get_qr_code(last_generated_code))
+            await bot.send_photo(chat_id=tg_id, photo=photo)
+            os.remove(photo)
 
 
 
