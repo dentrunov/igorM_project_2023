@@ -86,6 +86,8 @@ RUN set -ex \
         libtbb-dev \
         libtesseract-dev \
         python3-dev \
+        fswebcam \
+        v4l-utils\
     && apt-get -qq autoremove \
     && apt-get -qq clean
 

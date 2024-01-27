@@ -8,18 +8,20 @@ from sqlalchemy.orm import Session
 # from .igorm_2023.tbot.config import db_data
 from models import Pupils
 from config import db_data
+# while True:
+#     print(1)
 
 HOURS = 2
 engine = create_engine(db_data, echo=True)
 
 cap = cv2.VideoCapture(0)
-# initialize the cv2 QRCode detector
+# инициализация qr-reader
 detector = cv2.QRCodeDetector()
 
 while True:
     _, img = cap.read()
     data, bbox, _ = detector.detectAndDecode(img)
-    # check if there is a QRCode in the image
+    # чтение qr-кода
     if data:
         with Session(engine) as session:
             query = select(Pupils.pupil_id, Pupils.pupil_name, Pupils.last_generated_code_date).where(Pupils.last_generated_code == data)
@@ -41,4 +43,5 @@ while True:
     
     cv2.imshow("QRCODEscanner", img)
     if cv2.waitKey(1) == ord("q"):
+        # остановка чтения
         break

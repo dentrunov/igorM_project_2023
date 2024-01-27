@@ -30,6 +30,7 @@ kb = [
 gen_kb = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
 
 def get_qr_code(hash):
+    """ получение QR-кода"""
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -45,7 +46,7 @@ def get_qr_code(hash):
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
     """
-    This handler receives messages with `/start` command
+    обработка команды /start
     """
     print(message.from_user.id, message.from_user.full_name)
     with Session(engine) as session:
@@ -62,7 +63,7 @@ async def command_start_handler(message: Message) -> None:
 @dp.message(F.text.lower() == 'показать qr-code')
 async def command__handler_send_qr(message: Message) -> None:
     """
-    This handler receives messages with `Показать qr-code` command button
+    Обработка  `Показать qr-code` command button
     """
     id = message.from_user.id
     with Session(engine) as session:
@@ -77,9 +78,8 @@ async def command__handler_send_qr(message: Message) -> None:
 @dp.message(F.text.lower() == 'отправить всем')
 async def command__handler_send_qr_all(message: Message) -> None:
     """
-    This handler receives messages with `Отправить всемПоказать qr-code` command button
+    Обраотка `Отправить всем` command button
     """
-    
     with Session(engine) as session:
         # query = text(f"""SELECT tg_id, last_generated_code 
         #             FROM pupils WHERE tg_id!=0""")
@@ -90,19 +90,11 @@ async def command__handler_send_qr_all(message: Message) -> None:
         await bot.send_photo(chat_id=tg_id, photo=photo)
         os.remove(photo)
 
-# @dp.message()
-# async def test_all_handler(message: Message) -> None:
-#     """
-    
-#     """
-#     await message.answer(f"Hello, {hbold(message.from_user.ne)}!")
 
 
 async def main() -> None:
-    # Initialize Bot instance with a default parse mode which will be passed to all API calls
-    # bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
+    """запуск бота"""
     await dp.start_polling(bot)
-
 
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)

@@ -58,6 +58,7 @@ services:
     container_name: qr_reader
     environment:
       - PYTHONUNBUFFERED=True
+      - DISPLAY
     devices:
       - "/dev/video0:/dev/video0"
     restart: always

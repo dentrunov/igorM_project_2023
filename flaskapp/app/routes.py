@@ -23,10 +23,12 @@ def allowed_file(filename):
 @app.route('/')
 @app.route('/index')
 def index():
+    """ главная страница """
     return render_template('index.html')
 
 @app.route('/enter', methods=['GET', 'POST'])
 def enter():
+    """ функция входа пользователя """
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = AuthForm()
@@ -41,6 +43,7 @@ def enter():
 
 @app.route('/reg', methods=['GET', 'POST'])
 def reg():
+    """ регистрация пользователя"""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
@@ -55,12 +58,14 @@ def reg():
 
 @app.route('/logout')
 def logout():
+    """ функция выхода пользователя """
     logout_user()
     return redirect(url_for('index'))
 
 @app.route('/check', methods=['GET', 'POST'])
 @login_required
 def check():
+    """ функция просмотра учеников """
     gen_pupils_form = CreatePupilsForm()
     codes_form = CreateCodesForm()
     add_pulils_form = AddPupilsFromFileForm()
@@ -129,5 +134,6 @@ def check():
 @app.route('/new_users', methods=['GET', 'POST'])
 @login_required
 def new_users():
+    """ функция просмотра новых пользователей бота"""
     new_users = NewUsers.query.all()
     return render_template('new_users.html', title="Новые пользователи", new_users=new_users)

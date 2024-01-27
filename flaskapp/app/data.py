@@ -59,7 +59,9 @@ names = [
 letters = [chr(i)+'.' for i in range(ord("А"), ord("Я")+1)]
 
 def generate_pupils(number):
+    """ создание виртуальных учеников"""
     return [{"pupil_name": choice(names) + ' ' + choice(letters)} for _ in range(number)]
 
 def generate_codes(number):
+    """ гененирование уникальных кодов"""
     return [str(uuid4()) for i in range(number)]
