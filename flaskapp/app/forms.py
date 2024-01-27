@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, SubmitField, IntegerField, HiddenField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, SubmitField, IntegerField, HiddenField, FileField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
 class AuthForm(FlaskForm):
     username = StringField("Имя пользователя")
-    pasw = PasswordField("Имя пользователя")
+    pasw = PasswordField("Пароль")
     submit = SubmitField('Войти')
 
 class RegistrationForm(FlaskForm):
@@ -31,3 +31,7 @@ class CreateTGIDForm(FlaskForm):
     tgid_input = StringField('TGID', validators=[DataRequired()])
     tg_hidden = HiddenField("TGhid")
     tgid_submit = SubmitField('Сохранить')
+
+class AddPupilsFromFileForm(FlaskForm):
+    addpupil_file = FileField('Загрузите файл')
+    addpupil_submit = SubmitField('Сохранить')

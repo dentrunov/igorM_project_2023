@@ -40,6 +40,15 @@
     {{ codes_form.hidden_tag() }}
     <p>{{ codes_form.submit_code() }}</p>
 </form>
+
+<h3>Загрузить учеников из файла</h3>
+<form action="" method="post" enctype="multipart/form-data">
+    {{ add_pulils_form.hidden_tag() }}
+    <p>{{ add_pulils_form.addpupil_file() }}</p>
+    <p>{{ add_pulils_form.addpupil_submit() }}</p>
+</form>
+
+<h3>Сгеренерировать учеников</h3>
 <form action="" method="post">
     {{ gen_pupils_form.hidden_tag() }}
     <p>
