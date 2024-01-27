@@ -24,7 +24,6 @@ while True:
         with Session(engine) as session:
             query = select(Pupils.pupil_id, Pupils.pupil_name, Pupils.last_generated_code_date).where(Pupils.last_generated_code == data)
             new_user = session.execute(query).fetchone()
-            print(new_user)
             if new_user:
                 now = dt.now()
                 user_date = new_user[2]

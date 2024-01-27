@@ -55,3 +55,12 @@ class Visits(db.Model):
 
     def __repr__(self):
         return '<Code {}>'.format(self.visit_datetime)
+    
+class NewUsers(db.Model):
+    new_user_id = db.Column(db.Integer, primary_key=True)
+    new_user_name = db.Column(db.String(64), index=True)
+    new_user_tg_id = db.Column(db.Integer, index=True, unique=True)
+    new_user_datetime = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<NewUser {}>'.format(self.new_user_name)

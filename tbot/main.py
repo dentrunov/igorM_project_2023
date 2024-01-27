@@ -1,10 +1,11 @@
 import asyncio
 import logging
-import sys
+import sys, os
 import qrcode
-from sqlalchemy import create_engine, text, select
+from sqlalchemy import create_engine, text, select, insert
 from sqlalchemy.orm import Session
 from datetime import date
+from datetime import datetime as dt
 
 
 from aiogram import Bot, Dispatcher, Router, types, F
@@ -16,7 +17,7 @@ from aiogram.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton
 
 from config import TOKEN, db_data
-from models import Pupils
+from models import Pupils, NewUsers
 
 dp = Dispatcher()
 engine = create_engine(db_data, echo=True)
@@ -24,7 +25,7 @@ engine = create_engine(db_data, echo=True)
 
 kb = [
         [KeyboardButton(text="Показать qr-code")],
-        [KeyboardButton(text="Отправить всем")]
+        [KeyboardButton(text="Отправить всем")],
     ]
 gen_kb = ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
 
@@ -46,8 +47,17 @@ async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
-    print(message.from_user.id)
-    await message.answer(f"Hello, {hbold(message.from_user.full_name)}!", reply_markup=gen_kb)
+    print(message.from_user.id, message.from_user.full_name)
+    with Session(engine) as session:
+        query = select(NewUsers.new_user_tg_id).where(NewUsers.new_user_tg_id == message.from_user.id)
+        new_user = session.execute(query).fetchone()
+        if not new_user:
+            new_user = insert(NewUsers).values(new_user_name=message.from_user.full_name,
+                                new_user_tg_id=message.from_user.id,
+                                new_user_datetime=dt.now())
+            session.execute(new_user)
+            session.commit()
+    await message.answer(f"Привет, {hbold(message.from_user.full_name)}!", reply_markup=gen_kb)
 
 @dp.message(F.text.lower() == 'показать qr-code')
 async def command__handler_send_qr(message: Message) -> None:
@@ -78,6 +88,7 @@ async def command__handler_send_qr_all(message: Message) -> None:
     for tg_id, last_generated_code in users:
         photo = FSInputFile(get_qr_code(last_generated_code))
         await bot.send_photo(chat_id=tg_id, photo=photo)
+        os.remove(photo)
 
 # @dp.message()
 # async def test_all_handler(message: Message) -> None:

@@ -6,7 +6,7 @@ from datetime import datetime as dt
 
 from .forms import AuthForm, RegistrationForm, CreatePupilsForm, CreateCodesForm, CreateTGIDForm
 from app import app, db
-from .models import User, Pupils
+from .models import User, Pupils, NewUsers
 from .data import generate_pupils, generate_codes
 
 
@@ -81,3 +81,9 @@ def check():
     
     # return render_template('check.html', title="Проверка", codes_form=codes_form, pupils_list=pupils_list)
     return render_template('check.html', title="Проверка", gen_pupils_form=gen_pupils_form, codes_form=codes_form, pupils_list=pupils_list, tg_forms=tg_forms)
+
+@app.route('/new_users', methods=['GET', 'POST'])
+@login_required
+def new_users():
+    new_users = NewUsers.query.all()
+    return render_template('new_users.html', title="Новые пользователи", new_users=new_users)

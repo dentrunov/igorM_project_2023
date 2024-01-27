@@ -22,3 +22,13 @@ class Pupils(Base):
 
     def __repr__(self):
         return '<Pupil {}>'.format(self.pupil_name)
+
+class NewUsers(Base):
+    __tablename__ = "new_users" 
+    new_user_id: Mapped[int] = mapped_column(primary_key=True)
+    new_user_name: Mapped[str] = mapped_column(String(64), index=True)
+    new_user_tg_id: Mapped[int] = mapped_column(BigInteger(), index=True, default=0)
+    new_user_datetime: Mapped[int] = mapped_column(DateTime())
+
+    def __repr__(self):
+            return '<NewUser {}>'.format(self.new_user_name)

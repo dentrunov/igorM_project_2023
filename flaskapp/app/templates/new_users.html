@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+<h1>Список учеников</h1>
+
+{% if new_users|length > 0 %}
+<table class="table table-light table-striped">
+    <thead>
+        <tr>    
+          <th scope="col">Имя пользователя</th>
+          <th scope="col">TG ID</th>
+          <th scope="col">Последнее посещение</th>
+        </tr>
+      </thead>
+    {% for i in range(new_users|length) %}
+    <tr>
+        <td> {{ new_users[i].new_user_name}} </td>
+        <td>  {{ new_users[i].new_user_tg_id}}</td>
+        <td>{{ new_users[i].new_user_datetime }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
