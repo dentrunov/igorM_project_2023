@@ -1,0 +1,14 @@
+a.rename:link {
+    font-size: 10px;
+    text-decoration: none;
+    color:cadetblue
+}
+a.rename_close:link {
+    font-size: 10px;
+    text-decoration: none;
+    color:cadetblue;
+    display: none;
+}
+.rename_form  div{
+    display: none;
+}

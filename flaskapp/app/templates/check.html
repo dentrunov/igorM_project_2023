@@ -15,13 +15,34 @@
           <th scope="col">Последнее посещение</th>
           <th scope="col">Код ученика</th>
           <th scope="col">TG ID</th>
+          <th scope="col">Удаление</th>
         </tr>
       </thead>
     {% for i in range(pupils_list|length) %}
     <tr>
-        <td>{{ pupils_list[i].pupil_id }} </td>
-        <td> {{ pupils_list[i].pupil_name}} </td>
-        <td>  {{ pupils_list[i].last_visit}}</td>
+        <td>
+            <p>{{ pupils_list[i].pupil_id }} </p>
+
+        </td>
+        <td> 
+            <p class="pupil_name" id="pupil_name_{{i}}">{{ pupils_list[i].pupil_name}} </p>
+            <div>
+                
+                <form action="" method="post" class="rename_form" id="ren_{{i}}">
+                    <div>
+                    {{ ren_forms[i].rename_hidden(value=pupils_list[i].pupil_id) }}
+                    {{ ren_forms[i].hidden_tag()}}
+                    {{ ren_forms[i].rename(value=pupils_list[i].pupil_name)}}                
+                    {{ ren_forms[i].renamepupil_submit() }}
+                    
+                    </div>
+                    <a href=# class="rename_close" id="rename_close_{{i}}">Скрыть</a>
+                    <a href=# class="rename" id="rename_{{i}}">Переименовать</a>
+                </form>
+                
+            </div>
+        </td>
+        <td>{{ pupils_list[i].last_visit}}</td>
         <td>{{ pupils_list[i].last_generated_code }}</td>
         <td>
             <form action="" method="post">
@@ -29,6 +50,13 @@
                 {{ tg_forms[i].hidden_tag() }}                
                 {{ tg_forms[i].tgid_input(value=pupils_list[i].tg_id if pupils_list[i].tg_id != 0 else '' ) }}
                 {{ tg_forms[i].tgid_submit() }}
+            </form>
+        </td>
+        <td>
+            <form action="" method="post">
+                {{ del_forms[i].delete_hidden(value=pupils_list[i].pupil_id) }}
+                {{ del_forms[i].hidden_tag() }}                
+                {{ del_forms[i].deletepupil_submit() }}
             </form>
         </td>
     </tr>

@@ -95,12 +95,11 @@ async def command__handler_send_qr_all(message: Message) -> None:
             os.remove(photo)
 
 
-
 async def main() -> None:
     """запуск бота"""
     await dp.start_polling(bot)
 
-
-logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
-asyncio.run(main())
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
+    asyncio.run(main())

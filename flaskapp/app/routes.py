@@ -4,7 +4,7 @@ from urllib.parse import urlsplit
 
 from datetime import datetime as dt
 
-from .forms import AuthForm, RegistrationForm, CreatePupilsForm, CreateCodesForm, CreateTGIDForm, AddPupilsFromFileForm
+from .forms import *
 from app import app, db
 from .models import User, Pupils, NewUsers
 from .data import generate_pupils, generate_codes
@@ -72,6 +72,8 @@ def check():
     pupils_list = Pupils.query.all()
     q = len(pupils_list)
     tg_forms = [CreateTGIDForm() for i in range(q)]
+    ren_forms = [RenamePupilsForm() for i in range(q)]
+    del_forms = [DeletePupilsForm() for i in range(q)]
 
     if codes_form.submit_code.data and codes_form.validate_on_submit():
         
@@ -115,20 +117,37 @@ def check():
 
     
     if CreateTGIDForm().tgid_submit.data and CreateTGIDForm().validate_on_submit():
+        # сохранение TG ID для ученика
         pupil_id = request.form["tg_hidden"]
         update_pupil = Pupils.query.filter_by(pupil_id=pupil_id).first()
         update_pupil.tg_id = request.form["tgid_input"]
         db.session.commit()
         return redirect(url_for('check'))
- 
     
-    # return render_template('check.html', title="Проверка", codes_form=codes_form, pupils_list=pupils_list)
+    if DeletePupilsForm().deletepupil_submit.data and DeletePupilsForm().validate_on_submit():
+        # удаление ученика
+        pupil_id = request.form["delete_hidden"]
+        delete_pupil = Pupils.query.filter_by(pupil_id=pupil_id).first()
+        db.session.delete(delete_pupil)
+        db.session.commit()
+        return redirect(url_for('check'))
+    
+    if RenamePupilsForm().renamepupil_submit.data and RenamePupilsForm().validate_on_submit():
+        # удаление ученика
+        pupil_id = request.form["rename_hidden"]
+        rename_pupil = Pupils.query.filter_by(pupil_id=pupil_id).first()
+        rename_pupil.pupil_name = request.form["rename"]
+        db.session.commit()
+        # return redirect(url_for('check'))
+ 
     return render_template('check.html', title="Проверка", 
                            gen_pupils_form=gen_pupils_form, 
                            codes_form=codes_form, 
                            pupils_list=pupils_list, 
                            tg_forms=tg_forms,
                            add_pulils_form=add_pulils_form,
+                           ren_forms=ren_forms,
+                           del_forms=del_forms,
                            )
 
 @app.route('/new_users', methods=['GET', 'POST'])

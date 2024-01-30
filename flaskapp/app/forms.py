@@ -41,3 +41,14 @@ class AddPupilsFromFileForm(FlaskForm):
     """Форма добавления учеников из файла"""
     addpupil_file = FileField('Загрузите файл')
     addpupil_submit = SubmitField('Сохранить')
+
+class DeletePupilsForm(FlaskForm):
+    """Форма удаления учеников из файла"""
+    delete_hidden = HiddenField("Delhid")
+    deletepupil_submit = SubmitField('Удалить')
+
+class RenamePupilsForm(FlaskForm):
+    """Форма удаления учеников из файла"""
+    rename = StringField()
+    rename_hidden = HiddenField("Renhid")
+    renamepupil_submit = SubmitField('Сохранить')
