@@ -71,10 +71,11 @@ async def command__handler_send_qr(message: Message) -> None:
         user = session.execute(query).first()
         code = user[0].last_generated_code
     if code != 0:
-        photo = FSInputFile(get_qr_code(code))
+        photo_name = get_qr_code(code)
+        photo = FSInputFile(photo_name)
         dt = date.today().strftime("%d.%m.%Y")
         await message.answer_photo(photo, caption=f"Ваш код на {dt}")
-        os.remove(photo)
+        os.remove(photo_name)
     else:
         await message.answer(f"Вы уже вошли в школу, {hbold(message.from_user.full_name)}!", reply_markup=gen_kb)
 

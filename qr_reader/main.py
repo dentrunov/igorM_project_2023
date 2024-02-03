@@ -3,13 +3,12 @@ from datetime import datetime as dt
 from datetime import timedelta
 from sqlalchemy import create_engine, text, select, update
 from sqlalchemy.orm import Session
+from uuid import uuid4
 
-# from .igorm_2023.tbot.models import Pupils
-# from .igorm_2023.tbot.config import db_data
 from models import Pupils
 from config import db_data
-# while True:
-#     print(1)
+
+
 
 HOURS = 2
 engine = create_engine(db_data, echo=True)
@@ -20,25 +19,43 @@ detector = cv2.QRCodeDetector()
 
 while True:
     _, img = cap.read()
-    data, bbox, _ = detector.detectAndDecode(img)
+    try:
+        data, bbox, _ = detector.detectAndDecode(img)
+    except:
+        continue
     # чтение qr-кода
     if data:
+        if data == 0:
+            print("Невозможно обработать")
         with Session(engine) as session:
-            query = select(Pupils.pupil_id, Pupils.pupil_name, Pupils.last_generated_code_date).where(Pupils.last_generated_code == data)
-            new_user = session.execute(query).fetchone()
+            try:
+                query = select(
+                    Pupils.pupil_id,
+                    Pupils.pupil_name,
+                    Pupils.last_generated_code_date,
+                    Pupils.last_visit,
+                    Pupils.out_time,
+                    ).where(Pupils.last_generated_code == data)
+                new_user = session.execute(query).one()
+            except:
+                continue
             if new_user:
+                id = new_user.pupil_id
                 now = dt.now()
-                user_date = new_user[2]
-                if user_date - dt.now() < timedelta(hours=HOURS):
-                    print("Пришел", new_user[1], now)
-                    query = update(Pupils).where(Pupils.last_generated_code == data).values(last_visit=now, last_generated_code=0)
-                    session.execute(query)
-                    session.commit()
-                    break
+                print("++++++++++++++++++++++++++++++++++++++")
+                print("Пришел", new_user.pupil_name, now.strftime("%d.%m.%Y %H:%M:%S"))
+                print("++++++++++++++++++++++++++++++++++++++")
+
+                if new_user.last_visit is not None and now.day - new_user.last_visit.day == 0:
+                    query = update(Pupils).where(Pupils.pupil_id == id).values(out_time=now, last_generated_code=str(uuid4()))
                 else:
-                    print("Слишком поздно!", new_user[1], now)
-            else:
-                print("Нет такого ученика")
+                    query = update(Pupils).where(Pupils.pupil_id == id).values(last_visit=now, last_generated_code=str(uuid4()))
+                session.execute(query)
+                    
+                session.commit()
+                
+            # else:
+            #     print("Нет такого ученика")
         # break
     
     cv2.imshow("QRCODEscanner", img)

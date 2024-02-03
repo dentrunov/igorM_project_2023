@@ -70,17 +70,26 @@ def check():
     codes_form = CreateCodesForm()
     add_pulils_form = AddPupilsFromFileForm()
     pupils_list = Pupils.query.all()
+    all_list = []
+    for pupil in pupils_list:
+        new_pupil = {key:value for key, value in dict(pupil.__dict__).items()}
+        if pupil.last_visit is not None:
+            new_pupil["last_visit"] = pupil.last_visit.strftime("%d.%m.%Y %H:%M:%S")
+        if pupil.out_time is not None:
+            new_pupil["out_time"] = pupil.out_time.strftime("%d.%m.%Y %H:%M:%S")
+        all_list.append(new_pupil)
     q = len(pupils_list)
     tg_forms = [CreateTGIDForm() for i in range(q)]
     ren_forms = [RenamePupilsForm() for i in range(q)]
     del_forms = [DeletePupilsForm() for i in range(q)]
 
     if codes_form.submit_code.data and codes_form.validate_on_submit():
-        
+        # запуск генерирования кодов для учеников
         codes = generate_codes(q)
+        pupils_list_codes = Pupils.query.all()
         for i in range(q):
-            pupils_list[i].last_generated_code = codes[i]
-            pupils_list[i].last_generated_code_date = dt.now()
+            pupils_list_codes[i].last_generated_code = codes[i]
+            pupils_list_codes[i].last_generated_code_date = dt.now()
         db.session.commit()
         return redirect(url_for('check'))
     
@@ -143,7 +152,7 @@ def check():
     return render_template('check.html', title="Проверка", 
                            gen_pupils_form=gen_pupils_form, 
                            codes_form=codes_form, 
-                           pupils_list=pupils_list, 
+                           pupils_list=all_list, 
                            tg_forms=tg_forms,
                            add_pulils_form=add_pulils_form,
                            ren_forms=ren_forms,
@@ -155,4 +164,7 @@ def check():
 def new_users():
     """ функция просмотра новых пользователей бота"""
     new_users = NewUsers.query.all()
+    for user in new_users:
+        if user.new_user_datetime is not None:
+            user.new_user_datetime = user.new_user_datetime.strftime("%d.%m.%Y %H:%M:%S")
     return render_template('new_users.html', title="Новые пользователи", new_users=new_users)

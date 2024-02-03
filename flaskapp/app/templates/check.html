@@ -13,6 +13,7 @@
           <th scope="col">#</th>
           <th scope="col">Имя</th>
           <th scope="col">Последнее посещение</th>
+          <th scope="col">Время выхода</th>
           <th scope="col">Код ученика</th>
           <th scope="col">TG ID</th>
           <th scope="col">Удаление</th>
@@ -43,6 +44,7 @@
             </div>
         </td>
         <td>{{ pupils_list[i].last_visit}}</td>
+        <td>{{ pupils_list[i].out_time}}</td>
         <td>{{ pupils_list[i].last_generated_code }}</td>
         <td>
             <form action="" method="post">
