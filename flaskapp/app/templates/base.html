@@ -27,7 +27,6 @@
     <div class="navbar-nav mr-auto">
         {{ render_nav_item('index', 'Главная страница') }}
         {% if not current_user.is_authenticated %}
-        {{ render_nav_item('reg', 'Регистрация') }}
         {{ render_nav_item('enter', 'Войти') }}
         {% else %}
         {{ render_nav_item('check', 'Список учеников') }}
