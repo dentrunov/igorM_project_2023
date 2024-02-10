@@ -2,19 +2,18 @@ import asyncio
 import logging
 import sys, os
 import qrcode
-from sqlalchemy import create_engine, text, select, insert
+from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 from datetime import date
 from datetime import datetime as dt
 
 
-from aiogram import Bot, Dispatcher, Router, types, F
+from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import CommandStart
 from aiogram.types import Message, FSInputFile
 from aiogram.utils.markdown import hbold
-from aiogram.types import ReplyKeyboardRemove, \
-    ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from config import TOKEN, db_data
 from models import Pupils, NewUsers
@@ -48,7 +47,6 @@ async def command_start_handler(message: Message) -> None:
     """
     обработка команды /start
     """
-    print(message.from_user.id, message.from_user.full_name)
     with Session(engine) as session:
         query = select(NewUsers.new_user_tg_id).where(NewUsers.new_user_tg_id == message.from_user.id)
         new_user = session.execute(query).fetchone()
@@ -69,15 +67,17 @@ async def command__handler_send_qr(message: Message) -> None:
     with Session(engine) as session:
         query = select(Pupils).where(Pupils.tg_id == id)
         user = session.execute(query).first()
-        code = user[0].last_generated_code
-    if code != 0:
-        photo_name = get_qr_code(code)
-        photo = FSInputFile(photo_name)
-        dt = date.today().strftime("%d.%m.%Y")
-        await message.answer_photo(photo, caption=f"Ваш код на {dt}")
-        os.remove(photo_name)
-    else:
-        await message.answer(f"Вы уже вошли в школу, {hbold(message.from_user.full_name)}!", reply_markup=gen_kb)
+        if user:
+            code = user[0].last_generated_code
+            if code != 0:
+                photo_name = get_qr_code(code)
+                photo = FSInputFile(photo_name)
+                dt = date.today().strftime("%d.%m.%Y")
+                await message.answer_photo(photo, caption=f"Ваш код на {dt}")
+                os.remove(photo_name)
+            else:
+                await message.answer(f"Вы уже вошли в школу, {hbold(message.from_user.full_name)}!", reply_markup=gen_kb)
+    await command_start_handler("/start")
 
 @dp.message(F.text.lower() == 'отправить всем')
 async def command__handler_send_qr_all(message: Message) -> None:

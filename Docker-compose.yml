@@ -33,15 +33,10 @@ services:
     container_name: tbot
     # Создание переменных окружения в контейнере
     environment:
-    #   # для отладки (при запуске в релиз убрать!)
-    #   - FLASK_ENV=development
-    #   ## Позволяет отслеживать процесс работы приложения в командной строке
       - PYTHONUNBUFFERED=True                   
-    #   ##
     # Перезапускаем сервис в случае падения 
-    restart: always
-    # Прокладывам путь для файлов. Все файлы, которые хранятся у вас в 
-    # директории ./backend, появятся в директории контейнера /backend
+    restart: on-failure
+    stop_signal: SIGINT
     volumes:
       - ./:/tbot
     # Открываем порт в контейнер
@@ -53,8 +48,8 @@ services:
       - db
       
   qr_reader:
-    privileged: true
     build: ./qr_reader/
+    privileged: true
     container_name: qr_reader
     environment:
       - PYTHONUNBUFFERED=True
@@ -63,11 +58,8 @@ services:
       - "/dev/video0:/dev/video0"
     restart: always
     volumes:
-      - ./:/qr_reader
-    # Открываем порт в контейнер
-    # Порт, который будет смотреть наружу : порт который используется внутри контейнера
-    # ports:
-    #   - "5000:5000"
+      - /dev:/dev
+    
     command: python3 main.py
     depends_on:
       - db

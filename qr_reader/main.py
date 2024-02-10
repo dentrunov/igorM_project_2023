@@ -1,7 +1,6 @@
 import cv2
 from datetime import datetime as dt
-from datetime import timedelta
-from sqlalchemy import create_engine, text, select, update
+from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import Session
 from uuid import uuid4
 
@@ -25,8 +24,6 @@ while True:
         continue
     # чтение qr-кода
     if data:
-        if data == 0:
-            print("Невозможно обработать")
         with Session(engine) as session:
             try:
                 query = select(
@@ -51,14 +48,9 @@ while True:
                 else:
                     query = update(Pupils).where(Pupils.pupil_id == id).values(last_visit=now, last_generated_code=str(uuid4()))
                 session.execute(query)
-                    
                 session.commit()
-                
-            # else:
-            #     print("Нет такого ученика")
-        # break
+
     
-    cv2.imshow("QRCODEscanner", img)
     if cv2.waitKey(1) == ord("q"):
         # остановка чтения
         break

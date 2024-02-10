@@ -30,7 +30,7 @@ def index():
 def enter():
     """ функция входа пользователя """
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect("url_for('index')")
     form = AuthForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -78,7 +78,8 @@ def check():
         if pupil.out_time is not None:
             new_pupil["out_time"] = pupil.out_time.strftime("%d.%m.%Y %H:%M:%S")
         all_list.append(new_pupil)
-    q = len(pupils_list)
+    # all_list.sort() TODO сделать сортировку
+    q = len(all_list)
     tg_forms = [CreateTGIDForm() for i in range(q)]
     ren_forms = [RenamePupilsForm() for i in range(q)]
     del_forms = [DeletePupilsForm() for i in range(q)]

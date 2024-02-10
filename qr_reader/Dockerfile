@@ -97,4 +97,5 @@ WORKDIR /myapp/qr_reader
 # RUN . .venv/bin/activate
 RUN pip install --upgrade pip --break-system-packages
 RUN pip install -r requirements.txt --break-system-packages
+
 # ENTRYPOINT ["myapp/flaskapp/entrypoint.sh"]
